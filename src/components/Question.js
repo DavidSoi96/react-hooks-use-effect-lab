@@ -4,15 +4,19 @@ function Question({ question, onAnswered }) {
   const [timeRemaining, setTimeRemaining] = useState(10);
 
   useEffect(() => {
+    // If time runs out, reset timer and mark question as incorrect
+    if (timeRemaining === 0) {
+      setTimeRemaining(10);
+      onAnswered(false);
+      return;
+    }
+
+    // Set up timer to decrease timeRemaining every second
     const timerId = setTimeout(() => {
-      if (timeRemaining > 0) {
-        setTimeRemaining(time => time - 1);
-      } else {
-        setTimeRemaining(10);
-        onAnswered(false);
-      }
+      setTimeRemaining(time => time - 1);
     }, 1000);
 
+    // Cleanup function to clear timeout when component unmounts or timeRemaining changes
     return () => clearTimeout(timerId);
   }, [timeRemaining, onAnswered]);
 
@@ -41,5 +45,3 @@ function Question({ question, onAnswered }) {
 }
 
 export default Question;
-
-
